@@ -24,17 +24,19 @@
 </body>
 <script type="text/javascript">
 	//--------------------------------------------------------------------------
-	function collage_insert(collage, container_id) {
+	function collage_insert(collage, container_id, scale) {
 	//--------------------------------------------------------------------------
 		container=$(container_id);
 		console.log(container);
 		container.css('position','relative');
 		for(i=0;i<collage.pics.length;i++) {
-			pic=collage.pics[i];
-			img=$('<img />', {src:pic.file});
+			var pic=collage.pics[i];
+			var img=$('<img />', {src:pic.file});
 			img.css('position', 'absolute');
-			img.css('top', pic.y0+'px');
-			img.css('left', pic.x0+'px');
+			img.css('top', pic.y0*scale+'px');
+			img.css('width', pic.width*scale+'px');
+			img.css('height', pic.height*scale+'px');
+			img.css('left', pic.x0*scale+'px');
 			console.log(img)
 			container.append(img);
 		}
@@ -68,7 +70,7 @@
 					y0 : 0 }
 			]
 		};
-		collage_insert(collage, '#parchemin_binding_place');
+		collage_insert(collage, '#parchemin_binding_place', 0.25);
 	});
 </script>
 </html>
