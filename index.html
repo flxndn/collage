@@ -1,10 +1,75 @@
+<!DOCTYPE html>
 <html>
 <head>
+	<meta charset="utf-8">
 	<title>Binding</title>
+
+	<script
+		src="https://code.jquery.com/jquery-3.2.1.min.js"
+		integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4="
+		crossorigin="anonymous"></script>
+
+	<style>
+		#parchemin_binding_place {
+			background:#ff8;
+			width:100%;
+			height:555px;
+		}
+	</style>
+
 </head>
 <body>
 	<h1>Parchemin binding</h1>
-	<div id="parchemin_binding"></div>
+	<div id="parchemin_binding_place"></div>
 </body>
+<script type="text/javascript">
+	//--------------------------------------------------------------------------
+	function collage_insert(collage, container_id) {
+	//--------------------------------------------------------------------------
+		container=$(container_id);
+		console.log(container);
+		container.css('position','relative');
+		for(i=0;i<collage.pics.length;i++) {
+			pic=collage.pics[i];
+			img=$('<img />', {src:pic.file});
+			img.css('position', 'absolute');
+			img.css('top', pic.y0+'px');
+			img.css('left', pic.x0+'px');
+			console.log(img)
+			container.append(img);
+		}
+	}
+	//--------------------------------------------------------------------------
+	//--------------------------------------------------------------------------
+	$(document).ready(function() {
+		var collage = {
+			id: "parchemin_binding_collage",
+			pics : [
+				{	id : "lomo",
+					file : "img/lomo.jpg",
+					resolution : 300,
+					width : 299,
+					height : 2294, 
+					x0 : 1414,
+					y0 : 0},
+				{	id : "anterior",
+					file : "img/tapa_anterior.jpg",
+					resolution : 300,
+					width : 1423,
+					height : 2319,
+					x0 : 1713,
+					y0 : 0},
+				{	id : "posterior",
+					file : "img/tapa_posterior.jpg",
+					resolution : 300,
+					width : 1414,
+					height : 2319,
+					x0 : 0,
+					y0 : 0 }
+			]
+		};
+		collage_insert(collage, '#parchemin_binding_place');
+	});
+</script>
 </html>
 
