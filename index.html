@@ -14,37 +14,50 @@
 			background:#ff8;
 			width:100%;
 			height:555px;
+			overflow: scroll;
+		}
+		.parameter {
+			width:2em;
 		}
 	</style>
 
 </head>
 <body>
 	<h1>Parchemin binding</h1>
+	<ul id="controllers">
+		<input type="text" class="parameter" id="scale" value="0.1" />
+		<input type="text" class="parameter" id="dx" value="20" />
+		<input type="text" class="parameter" id="dy" value="20" />
+		<input type="button" id="zoomIn" value="+" />
+		<input type="button" id="zoomOut" value="-" />
+	</ul>
 	<div id="parchemin_binding_place"></div>
 </body>
 <script type="text/javascript">
 	//--------------------------------------------------------------------------
-	function collage_insert(collage, container_id, scale) {
+	function collage_insert(collage, container) {
 	//--------------------------------------------------------------------------
-		container=$(container_id);
-		console.log(container);
-		container.css('position','relative');
-		for(i=0;i<collage.pics.length;i++) {
+		scale = $('#scale').val();
+		dx = $('#dx').val();
+		dy = $('#dy').val();
+
+		container.find('img').remove();
+
+		for(var i=0;i<collage.pics.length;i++) {
 			var pic=collage.pics[i];
 			var img=$('<img />', {src:pic.file});
 			img.css('position', 'absolute');
-			img.css('top', pic.y0*scale+'px');
 			img.css('width', pic.width*scale+'px');
 			img.css('height', pic.height*scale+'px');
-			img.css('left', pic.x0*scale+'px');
-			console.log(img)
+			img.css('left', (pic.x0*scale+dx)+'px');
+			img.css('top', (pic.y0*scale+dy)+'px');
 			container.append(img);
 		}
 	}
 	//--------------------------------------------------------------------------
+	function getCollageData() {
 	//--------------------------------------------------------------------------
-	$(document).ready(function() {
-		var collage = {
+		return {
 			id: "parchemin_binding_collage",
 			pics : [
 				{	id : "lomo",
@@ -70,7 +83,30 @@
 					y0 : 0 }
 			]
 		};
-		collage_insert(collage, '#parchemin_binding_place', 0.25);
+	}
+	//--------------------------------------------------------------------------
+	//--------------------------------------------------------------------------
+	$(document).ready(function() {
+		var collage = getCollageData();
+		var container_id = 'parchemin_binding_place';
+
+		container=$("#"+container_id);
+		container.css('position','relative');
+
+		collage_insert(collage, container);
+
+		$('#zoomIn').click(function() {
+			$('#scale').val($('#scale').val()*1.1);
+			$('#scale').change();
+		});
+
+		$('#zoomOut').click(function() {
+			$('#scale').val($('#scale').val()*0.9);
+			$('#scale').change();
+		});
+		$('#scale').change(function() {
+			collage_insert(collage, container);
+		});
 	});
 </script>
 </html>
