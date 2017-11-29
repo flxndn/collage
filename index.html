@@ -13,11 +13,14 @@
 		#parchemin_binding_place {
 			background:#ff8;
 			width:100%;
-			height:555px;
+			height:600px;
 			overflow: scroll;
 		}
 		.parameter {
-			width:2em;
+			width:2.5em;
+		}
+		#scale, #dx, #dy {
+			display:none;
 		}
 	</style>
 
@@ -25,11 +28,13 @@
 <body>
 	<h1>Parchemin binding</h1>
 	<ul id="controllers">
-		<input type="text" class="parameter" id="scale" value="0.1" />
+		<input type="text" class="parameter" id="scale" value="1" />
+		<input type="text" class="parameter" id="percentaje" value="100%" />
 		<input type="text" class="parameter" id="dx" value="20" />
 		<input type="text" class="parameter" id="dy" value="20" />
 		<input type="button" id="zoomIn" value="+" />
 		<input type="button" id="zoomOut" value="-" />
+		<input type="button" id="zoom100" value="100%" />
 	</ul>
 	<div id="parchemin_binding_place"></div>
 </body>
@@ -99,12 +104,16 @@
 			$('#scale').val($('#scale').val()*1.1);
 			$('#scale').change();
 		});
-
 		$('#zoomOut').click(function() {
 			$('#scale').val($('#scale').val()*0.9);
 			$('#scale').change();
 		});
+		$('#zoom100').click(function() {
+			$('#scale').val(1);
+			$('#scale').change();
+		});
 		$('#scale').change(function() {
+			$('#percentaje').val(Math.round($(this).val()*100)+"%");
 			collage_insert(collage, container);
 		});
 	});
