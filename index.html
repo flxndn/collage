@@ -22,6 +22,10 @@
 		#scale, #dx, #dy {
 			display:none;
 		}
+		.units {
+			font-size:80%;
+			color: #444;
+		}
 	</style>
 
 </head>
@@ -29,7 +33,9 @@
 	<h1>Parchemin binding</h1>
 	<ul id="controllers">
 		<input type="text" class="parameter" id="scale" value="1" />
-		<input type="text" class="parameter" id="percentaje" value="100%" />
+		<span class="parameter" id="percentaje">
+			<span class="value">100</span><span class="units">%</span>
+		</span>
 		<input type="text" class="parameter" id="dx" value="20" />
 		<input type="text" class="parameter" id="dy" value="20" />
 		<input type="button" id="zoomIn" value="+" />
@@ -43,8 +49,8 @@
 	function collage_insert(collage, container) {
 	//--------------------------------------------------------------------------
 		scale = $('#scale').val();
-		dx = $('#dx').val();
-		dy = $('#dy').val();
+		dx = parseFloat($('#dx').val());
+		dy = parseFloat($('#dy').val());
 
 		container.find('img').remove();
 
@@ -54,7 +60,8 @@
 			img.css('position', 'absolute');
 			img.css('width', pic.width*scale+'px');
 			img.css('height', pic.height*scale+'px');
-			img.css('left', (pic.x0*scale+dx)+'px');
+			var left=pic.x0*parseFloat(scale)+dx;
+			img.css('left', left+'px');
 			img.css('top', (pic.y0*scale+dy)+'px');
 			container.append(img);
 		}
@@ -113,7 +120,7 @@
 			$('#scale').change();
 		});
 		$('#scale').change(function() {
-			$('#percentaje').val(Math.round($(this).val()*100)+"%");
+			$('#percentaje .value').text(Math.round($(this).val()*100));
 			collage_insert(collage, container);
 		});
 	});
