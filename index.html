@@ -10,7 +10,7 @@
 		crossorigin="anonymous"></script>
 
 	<style>
-		#parchemin_binding_place {
+		#collage_container {
 			background:#ff8;
 			width:100%;
 			height:600px;
@@ -26,11 +26,19 @@
 			font-size:80%;
 			color: #444;
 		}
+		#data {
+			padding:0.1em 0.5em;
+			border: 1px solid black;
+			font-family:monospace;
+			max-width:80em;
+			width:100em;
+			height:25em;
+		}
 	</style>
 
 </head>
 <body>
-	<h1>Parchemin binding</h1>
+	<h1 id="title">title</h1>
 	<ul id="controllers">
 		<input type="text" class="parameter" id="scale" value="1" />
 		<span class="parameter" id="percentaje">
@@ -42,11 +50,18 @@
 		<input type="button" id="zoomOut" value="-" />
 		<input type="button" id="zoom100" value="100%" />
 	</ul>
-	<div id="parchemin_binding_place"></div>
+	<div id="collage_container"></div>
+	<form>
+		Examples
+		<select id="examples_selector">
+		</select>
+		<textarea id="data"></textarea>
+		<button type="button" id="load_button">Load</button>
+	</form>
 </body>
 <script type="text/javascript">
 	//--------------------------------------------------------------------------
-	function collage_insert(collage, container) {
+	function collageInsert(collage, container) {
 	//--------------------------------------------------------------------------
 		scale = $('#scale').val();
 		dx = parseFloat($('#dx').val());
@@ -67,45 +82,17 @@
 		}
 	}
 	//--------------------------------------------------------------------------
-	function getCollageData() {
+	function updateCollage() {
 	//--------------------------------------------------------------------------
-		return {
-			id: "parchemin_binding_collage",
-			pics : [
-				{	id : "lomo",
-					file : "img/lomo.jpg",
-					resolution : 300,
-					width : 299,
-					height : 2294, 
-					x0 : 1414,
-					y0 : 0},
-				{	id : "anterior",
-					file : "img/tapa_anterior.jpg",
-					resolution : 300,
-					width : 1423,
-					height : 2319,
-					x0 : 1713,
-					y0 : 0},
-				{	id : "posterior",
-					file : "img/tapa_posterior.jpg",
-					resolution : 300,
-					width : 1414,
-					height : 2319,
-					x0 : 0,
-					y0 : 0 }
-			]
-		};
-	}
-	//--------------------------------------------------------------------------
-	//--------------------------------------------------------------------------
-	$(document).ready(function() {
-		var collage = getCollageData();
-		var container_id = 'parchemin_binding_place';
+		var collage = JSON.parse($('#data').val());
+		$('#title').html(collage.title);
+
+		var container_id = 'collage_container';
 
 		container=$("#"+container_id);
 		container.css('position','relative');
 
-		collage_insert(collage, container);
+		collageInsert(collage, container);
 
 		$('#zoomIn').click(function() {
 			$('#scale').val($('#scale').val()*1.1);
@@ -121,8 +108,83 @@
 		});
 		$('#scale').change(function() {
 			$('#percentaje .value').text(Math.round($(this).val()*100));
-			collage_insert(collage, container);
+			collageInsert(collage, container);
 		});
+	}
+	//--------------------------------------------------------------------------
+	//--------------------------------------------------------------------------
+	$(document).ready(function() {
+		examples={parchemin_binding_collage : {
+					title: "Parchemin binding",
+					pics : [
+						{	id : "lomo",
+							file : "img/lomo.jpg",
+							resolution : 300,
+							width : 299,
+							height : 2294, 
+							x0 : 1414,
+							y0 : 0},
+						{	id : "anterior",
+							file : "img/tapa_anterior.jpg",
+							resolution : 300,
+							width : 1423,
+							height : 2319,
+							x0 : 1713,
+							y0 : 0},
+						{	id : "posterior",
+							file : "img/tapa_posterior.jpg",
+							resolution : 300,
+							width : 1414,
+							height : 2319,
+							x0 : 0,
+							y0 : 0 } 
+					]
+				},
+				parchemin_binding_collage_2 : {
+					title: "Parchemin binding 2",
+					pics : [
+						{	id : "lomo",
+							file : "img/lomo.jpg",
+							resolution : 300,
+							width : 299,
+							height : 2294, 
+							x0 : 1414,
+							y0 : 0},
+						{	id : "anterior",
+							file : "img/tapa_anterior.jpg",
+							resolution : 300,
+							width : 1423,
+							height : 2319,
+							x0 : 1713,
+							y0 : 0},
+						{	id : "posterior",
+							file : "img/tapa_posterior.jpg",
+							resolution : 300,
+							width : 1414,
+							height : 2319,
+							x0 : 0,
+							y0 : 0 } 
+					]
+				}
+		};
+		var select = document.getElementById('examples_selector');
+
+		var keys = Object.keys(examples);
+		for(var key in examples) {
+			var opt = document.createElement('option');
+			opt.value = key
+			opt.innerHTML = examples[key].title;
+			select.appendChild(opt);
+		}
+		$('#examples_selector').change(function() {
+			$("#examples_selector option:selected").each(function() {
+				var id=$(this).val();
+				$('#data').val(JSON.stringify(examples[id]));
+				updateCollage();
+			});
+		}).change();
+
+		$("#load_button").click(updateCollage);
 	});
 </script>
 </html>
